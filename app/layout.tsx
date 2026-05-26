@@ -16,7 +16,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RL Policy Playground",
+  title: "Bellam Policy Playground",
   description:
     "Interactive visualization of reinforcement learning agents navigating grid worlds. Watch Q-learning, SARSA, and Monte Carlo algorithms learn in real-time with value function heatmaps and policy arrows.",
   keywords: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Bellam Policy Lab" }],
   openGraph: {
-    title: "RL Policy Playground",
+    title: "Bellam Policy Playground",
     description:
       "Watch reinforcement learning agents learn to navigate grid worlds in real-time",
     type: "website",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "RL Policy Playground",
+    title: "Bellam Policy Playground",
     description:
       "Interactive visualization of RL agents with real-time value function heatmaps",
   },

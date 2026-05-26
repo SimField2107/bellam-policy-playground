@@ -1,4 +1,4 @@
-# RL Policy Playground
+# Bellam Policy Playground
 
 Interactive visualization of reinforcement learning agents navigating grid worlds. Watch a small agent learn to reach a goal while a real-time value function heatmap shows what the agent believes about expected rewards from each state.
 

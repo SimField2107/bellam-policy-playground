@@ -71,7 +71,7 @@ export default function Home() {
         role="banner"
       >
         <h1 className="text-xl font-semibold tracking-tight text-text-primary uppercase">
-          RL Policy Playground
+          Bellam Policy Playground
         </h1>
         <p className="text-sm text-text-muted font-mono mt-1">
           Q-learning / SARSA / Monte Carlo on a grid world
