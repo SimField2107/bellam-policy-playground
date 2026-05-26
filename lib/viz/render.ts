@@ -1,4 +1,4 @@
-import { Action, Cell, GridConfig, NUM_ACTIONS } from "@/lib/rl/types";
+import { Action, GridConfig } from "@/lib/rl/types";
 import { greedy, getStateValue, softmaxConfidence } from "@/lib/rl/policy";
 import { encodeState } from "@/lib/rl/env";
 import { valueToColor, COLORS } from "./colors";
@@ -133,7 +133,7 @@ function renderCell(
   maxV: number,
   showHeatmap: boolean
 ): void {
-  const { ctx, config, cellSize, padding } = rc;
+  const { ctx, config, cellSize } = rc;
   const cell = config.cells[row][col];
   const rect = getCellRect(rc, row, col);
 

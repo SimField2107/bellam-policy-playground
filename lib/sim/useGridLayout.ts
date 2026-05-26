@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
-import { Cell, CellType, GridConfig } from "@/lib/rl/types";
+import { useCallback, useRef } from "react";
+import { Cell } from "@/lib/rl/types";
 import { createDefaultCell, createEmptyGrid } from "@/lib/rl/env";
 import { usePlaygroundStore } from "@/lib/store/playgroundStore";
 import { cloneConfig } from "@/lib/rl/presets";

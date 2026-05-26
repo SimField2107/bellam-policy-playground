@@ -9,6 +9,7 @@ import { Agent } from "@/lib/rl/agent";
 import { AgentConfig, AlgorithmType, GridConfig, SimStats } from "@/lib/rl/types";
 import { getStateValue } from "@/lib/rl/policy";
 import { usePlaygroundStore } from "@/lib/store/playgroundStore";
+import { renderGrid } from "@/lib/viz/render";
 
 const TRAIL_LENGTH = 10;
 const STATS_THROTTLE_MS = 100;
@@ -55,9 +56,24 @@ export function useSimulation() {
 
   const refs = useRef<SimulationRefs | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const animationRef = useRef<number | null>(null);
   const lastStatsUpdate = useRef<number>(0);
   const currentAlgorithm = useRef<AlgorithmType>(algorithm);
+
+  const isPlayingRef = useRef(isPlaying);
+  const speedRef = useRef(speed);
+  const vizOptionsRef = useRef(vizOptions);
+
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
+
+  useEffect(() => {
+    speedRef.current = speed;
+  }, [speed]);
+
+  useEffect(() => {
+    vizOptionsRef.current = vizOptions;
+  }, [vizOptions]);
 
   const initRefs = useCallback(
     (
@@ -84,7 +100,7 @@ export function useSimulation() {
 
   useEffect(() => {
     refs.current = initRefs(gridConfig, agentConfig, algorithm);
-  }, [gridConfig, initRefs]);
+  }, [gridConfig, agentConfig, algorithm, initRefs]);
 
   useEffect(() => {
     if (refs.current) {
@@ -207,7 +223,6 @@ export function useSimulation() {
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
 
-    const { renderGrid } = require("@/lib/viz/render");
     const { env, agent, trail } = refs.current;
 
     renderGrid(
@@ -217,19 +232,21 @@ export function useSimulation() {
       env.agentRow,
       env.agentCol,
       trail,
-      vizOptions
+      vizOptionsRef.current
     );
-  }, [vizOptions]);
+  }, []);
 
-  const tick = useCallback(
-    (timestamp: number) => {
-      if (!isPlaying || !refs.current) {
+  useEffect(() => {
+    let frameId: number;
+
+    const tick = (timestamp: number) => {
+      if (!isPlayingRef.current || !refs.current) {
         render();
-        animationRef.current = requestAnimationFrame(tick);
+        frameId = requestAnimationFrame(tick);
         return;
       }
 
-      const stepsPerFrame = Math.max(1, Math.floor(speed / 60));
+      const stepsPerFrame = Math.max(1, Math.floor(speedRef.current / 60));
 
       for (let i = 0; i < stepsPerFrame; i++) {
         runStep();
@@ -242,20 +259,15 @@ export function useSimulation() {
         lastStatsUpdate.current = timestamp;
       }
 
-      animationRef.current = requestAnimationFrame(tick);
-    },
-    [isPlaying, speed, runStep, render, updateStats]
-  );
+      frameId = requestAnimationFrame(tick);
+    };
 
-  useEffect(() => {
-    animationRef.current = requestAnimationFrame(tick);
+    frameId = requestAnimationFrame(tick);
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      cancelAnimationFrame(frameId);
     };
-  }, [tick]);
+  }, [runStep, render, updateStats]);
 
   const reset = useCallback(() => {
     if (!refs.current) return;
